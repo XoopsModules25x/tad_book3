@@ -1,27 +1,17 @@
 <?php
-function xoops_module_install_tad_book3(&$module)
-{
 
-    mk_dir(XOOPS_ROOT_PATH . "/uploads/tad_book3");
-    mk_dir(XOOPS_ROOT_PATH . "/uploads/tad_book3/file");
-    mk_dir(XOOPS_ROOT_PATH . "/uploads/tad_book3/image");
-    mk_dir(XOOPS_ROOT_PATH . "/uploads/tad_book3/image/.thumbs");
+use XoopsModules\Tadtools\Utility;
 
-    return true;
+if (!class_exists('XoopsModules\Tadtools\Utility')) {
+    require XOOPS_ROOT_PATH . '/modules/tadtools/preloads/autoloader.php';
 }
 
-//建立目錄
-function mk_dir($dir = "")
+function xoops_module_install_tad_book3(&$module)
 {
-    //若無目錄名稱秀出警告訊息
-    if (empty($dir)) {
-        return;
-    }
+    Utility::mk_dir(XOOPS_ROOT_PATH . '/uploads/tad_book3');
+    Utility::mk_dir(XOOPS_ROOT_PATH . '/uploads/tad_book3/file');
+    Utility::mk_dir(XOOPS_ROOT_PATH . '/uploads/tad_book3/image');
+    Utility::mk_dir(XOOPS_ROOT_PATH . '/uploads/tad_book3/image/.thumbs');
 
-    //若目錄不存在的話建立目錄
-    if (!is_dir($dir)) {
-        umask(000);
-        //若建立失敗秀出警告訊息
-        mkdir($dir, 0777);
-    }
+    return true;
 }

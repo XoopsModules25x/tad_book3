@@ -1,15 +1,16 @@
 <?php
 /*-----------引入檔案區--------------*/
-include "../../mainfile.php";
-include "../function.php";
-include_once $GLOBALS['xoops']->path('/modules/system/include/functions.php');
-$updateRecordsArray = system_CleanVars($_POST, 'tr', '', 'array');
+require dirname(dirname(__DIR__)) . '/mainfile.php';
+if (!$_SESSION['tad_book3_adm']) {
+    exit;
+}
 
 $sort = 1;
-foreach ($updateRecordsArray as $recordIDValue) {
-    $sql = "update " . $xoopsDB->prefix("tad_book3") . " set `sort`='{$sort}' where `tbsn`='{$recordIDValue}'";
-    $xoopsDB->queryF($sql) or die("Save Sort Fail! (" . date("Y-m-d H:i:s") . ")");
+foreach ($_POST['book'] as $tbsn) {
+    $tbsn = (int) $tbsn;
+    $sql = 'update ' . $xoopsDB->prefix('tad_book3') . " set `sort`='{$sort}' where `tbsn`='{$tbsn}'";
+    $xoopsDB->queryF($sql) or die('Save Sort Fail! (' . date('Y-m-d H:i:s') . ')');
     $sort++;
 }
 
-echo "Save Sort OK! (" . date("Y-m-d H:i:s") . ")";
+echo 'Save Sort OK! (' . date('Y-m-d H:i:s') . ')';

@@ -1,6 +1,5 @@
 <?php
-include_once XOOPS_ROOT_PATH . '/modules/tadtools/language/' . $xoopsConfig['language'] . '/modinfo_common.php';
-
+xoops_loadLanguage('modinfo_common', 'tadtools');
 define('_MI_TADBOOK3_NAME', 'Tad Book');
 define('_MI_TADBOOK3_AUTHOR', 'Tad Book');
 define('_MI_TADBOOK3_DESC', 'An easy on-line books module');
@@ -14,3 +13,12 @@ define('_MI_TADBOOK3_BNAME3', 'Book List');
 define('_MI_TADBOOK3_BDESC3', 'Display all books by a list');
 define('_MI_TADBOOK3_BNAME4', 'Index');
 define('_MI_TADBOOK3_BDESC4', 'Display index of currently reading book');
+define('_MI_TADBOOK3_BNAME5', 'List the specified book chapter directory');
+define('_MI_TADBOOK3_BDESC5', 'Specify a book, show all its chapters');
+
+define('_MI_TADBOOK3_DIRNAME', basename(dirname(dirname(__DIR__))));
+define('_MI_TADBOOK3_HELP_HEADER', __DIR__ . '/help/helpheader.tpl');
+define('_MI_TADBOOK3_BACK_2_ADMIN', 'Back to Administration of ');
+
+//help
+define('_MI_TADBOOK3_HELP_OVERVIEW', 'Overview');

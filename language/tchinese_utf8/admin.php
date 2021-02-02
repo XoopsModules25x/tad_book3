@@ -1,6 +1,6 @@
 <?php
-include_once '../../tadtools/language/' . $xoopsConfig['language'] . '/admin_common.php';
-define('_TAD_NEED_TADTOOLS', '需要 tadtools 模組，可至<a href="http://campus-xoops.tn.edu.tw/modules/tad_modules/index.php?module_sn=1" target="_blank">XOOPS輕鬆架</a>下載。');
+xoops_loadLanguage('admin_common', 'tadtools');
+
 define('_MA_TADBOOK3_NEW_PCSN', '在左邊分類下新增分類：');
 define('_MA_INPUT_BOOK_FORM', '編輯書籍');
 define('_MA_TADBOOK3_SORT', '排序');
@@ -14,7 +14,7 @@ define('_MA_TADBOOK3_COUNTER', '人氣');
 define('_MA_TADBOOK3_CREATE_DATE', '建立日期');
 define('_MA_TADBOOK3_TBCSN_MENU', '書籍分類');
 define('_MA_TADBOOK3_ADD_DOC', '新增文章');
-define("_MA_TADBOOK3_ADD_CATE", "建立新分類");
+define('_MA_TADBOOK3_ADD_CATE', '建立新分類');
 define('_MA_TADBOOK3_ENABLE', '顯示');
 define('_MA_TADBOOK3_UNABLE', '關閉');
 define('_MA_TADBOOK3_TBCSN', '分類編號');

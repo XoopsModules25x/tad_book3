@@ -1,27 +1,54 @@
 <?php
-include_once "header.php";
+use Xmf\Request;
+use XoopsModules\Tadtools\SyntaxHighlighter;
+use XoopsModules\Tadtools\Utility;
+
+/*-----------引入檔案區--------------*/
+require_once __DIR__ . '/header.php';
 set_time_limit(0);
-ini_set("memory_limit", "150M");
+ini_set('memory_limit', '150M');
 
-include_once $GLOBALS['xoops']->path('/modules/system/include/functions.php');
-$op       = system_CleanVars($_REQUEST, 'op', '', 'string');
-$filename = system_CleanVars($_REQUEST, 'filename', '', 'string');
-$tbdsn    = system_CleanVars($_REQUEST, 'tbdsn', 0, 'int');
+/*-----------執行動作判斷區----------*/
+$op = Request::getString('op');
+$tbsn = Request::getInt('tbsn');
+$header = Request::getInt('header', 1);
 
-$html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-  <meta http-equiv="content-type" content="text/html; charset=' . _CHARSET . '">
+$artical = get_tad_book3_docs($tbdsn);
+foreach ($artical as $key => $value) {
+    $$key = $value;
+}
+$doc_sort = mk_category($category, $page, $paragraph, $sort);
+$book = get_tad_book3($tbsn);
+//高亮度語法
+$SyntaxHighlighter = new SyntaxHighlighter();
+$syntaxhighlighter_code = $SyntaxHighlighter->render();
+$bootstrap = Utility::get_bootstrap('return');
+
+$html = '<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <title>' . $book['title'] . '-' . $doc_sort['main'] . '-' . $title . '</title>
+  ' . $bootstrap . '
+  <link rel="stylesheet" type="text/css" href="' . XOOPS_URL . '/modules/tad_book3/css/reset.css" >
   <style type="text/css">
-    #page{
-      border:1px solid black;
-      padding: 40px 60px 40px 60px;
-      background-image: url(images/paper_bg.jpg);
-      background-repeat: repeat-x;
-      line-height:200%;
+    body{
+      font-size: 100%;
     }
 
-    #page_title{
+    .page{
+      font-size: 100%;
+      line-height:2;
+      padding: 2cm;
+      background-image: url(' . XOOPS_URL . '/modules/tad_book3/images/paper_bg.jpg);
+      background-repeat: repeat-x;
+    }
+
+    .page_content{
+      font-size: 100%;
+    }
+
+    .page_title{
       border-bottom: 1px solid black;
       text-align:right;
       color:black;
@@ -29,21 +56,20 @@ $html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
     }
   </style>
   </head>
-  <body>';
+  <body>' . $syntaxhighlighter_code;
 
-$html .= view_page($tbdsn);
+$html .= view_page($tbdsn, $header);
 $html .= '
   </body>
 </html>';
 die($html);
 
 //觀看某一頁
-function view_page($tbdsn = "")
+function view_page($tbdsn = '', $header = 1)
 {
-    global $xoopsDB;
+    global $xoopsDB, $book, $artical, $doc_sort;
 
-    $all = get_tad_book3_docs($tbdsn);
-    foreach ($all as $key => $value) {
+    foreach ($artical as $key => $value) {
         $$key = $value;
     }
 
@@ -52,34 +78,26 @@ function view_page($tbdsn = "")
         $content .= $form_page['content'];
     }
 
-    $book = get_tad_book3($tbsn);
     if (!chk_power($book['read_group'])) {
-        header("location:index.php");
+        header('location:index.php');
         exit;
     }
 
     if (!empty($book['passwd']) and $_SESSION['passwd'] != $book['passwd']) {
         $data .= _MD_TADBOOK3_INPUT_PASSWD;
+
         return $data;
         exit;
     }
-
-    $doc_sort = mk_category($category, $page, $paragraph, $sort);
-
-    //高亮度語法
-    if (!file_exists(TADTOOLS_PATH . "/syntaxhighlighter.php")) {
-        redirect_header("index.php", 3, _MD_NEED_TADTOOLS);
-    }
-    include_once TADTOOLS_PATH . "/syntaxhighlighter.php";
-    $syntaxhighlighter      = new syntaxhighlighter();
-    $syntaxhighlighter_code = $syntaxhighlighter->render();
+    $page_title = $header ? "<div class='page_title'>{$book['title']}</div>" : '';
 
     $main = "
-    <div id='page'>
-      <div id='page_title'>{$book['title']}</div>
-
-      <h{$doc_sort['level']}>{$doc_sort['main']} {$title}</h{$doc_sort['level']}>
-      $content
+    <div class='page'>
+      $page_title
+      <div class='page_content'>
+        <h{$doc_sort['level']}>{$doc_sort['main']} {$title}</h{$doc_sort['level']}>
+        $content
+      </div>
     </div>
     ";
 
